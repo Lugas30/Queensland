@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.discounted {
+  opacity: 0.5; /* Change this color to your preferred style for discounted price */
+  text-decoration: line-through; /* To make the original price strike-through */
+}
+
+.original {
+  opacity: 0.5; /* To reduce the opacity of the original price */
+}
+
+.no-discount {
+  /* Style for non-discounted price, if needed */
+}
