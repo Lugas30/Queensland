@@ -2,12 +2,14 @@ import React from "react";
 import axios from "axios";
 import { useNavigate, Link } from 'react-router-dom';
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 export const Register = () => {
   const navigate = useNavigate();
   const [registerInput, setRegister] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
     error_list: [],
   });
@@ -23,6 +25,7 @@ export const Register = () => {
     const data = {
       name: registerInput.name,
       email: registerInput.email,
+      phone: registerInput.phone,
       password: registerInput.password,
     };
     axios.get("/sanctum/csrf-cookie").then((response) => {
@@ -30,8 +33,9 @@ export const Register = () => {
         if (res.data.status === 200) {
           localStorage.setItem("auth_token", res.data.token);
           localStorage.setItem("auth_name", res.data.username);
-          swal("Success", res.data.message, "success");
-          navigate("/");
+          toast.success("Anda berhasil mendaftar!");
+          // navigate("/");
+          // Seharusnya diarahkan ke halaman terakhir dibuka!
         } else {
           setRegister({
             ...registerInput,
@@ -99,6 +103,7 @@ export const Register = () => {
           </div>
         </form>
       </div>
+      <ToastContainer/>
     </div>
   );
 };

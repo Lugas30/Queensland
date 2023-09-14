@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 export const Signin = () => {
   const navigate = useNavigate();
@@ -29,11 +30,12 @@ export const Signin = () => {
         if (res.data.status === 200) {
           localStorage.setItem("auth_token", res.data.token);
           localStorage.setItem("auth_name", res.data.username);
-          swal("Success", res.data.message, "success");
-          toast.success("Success");
+          toast.success("Success", res.data.message);
           navigate("/");
+          // swal("Success", res.data.message, "success");
         } else if (res.data.status === 401) {
-          swal("Warning", res.data.message, "warning");
+          toast.warning("Warning", res.data.message);
+          // swal("Warning", res.data.message, "warning");
         } else {
           setLogin({ ...loginInput, error_list: res.data.validation_errors });
         }
@@ -47,21 +49,27 @@ export const Signin = () => {
         <figure className="w-1/2">
           <img src="/src/assets/images/auth-pic.jpg" alt="Movie" />
         </figure>
-        <div className="card-body w-3/6">
+        <form onSubmit={loginSubmit} className="card-body w-3/6">
           <h2 className="text-3xl font-bold mb-5">Sign In</h2>
           <input
             type="email"
+            name="email"
             placeholder="Email"
             className="input input-bordered rounded-none w-full max-w-xs mb-5"
+            onChange={handleInput}
+            value={loginInput.email}
           />
           <input
             type="password"
+            name="password"
             placeholder="Password"
             className="input input-bordered rounded-none w-full max-w-xs mb-5"
+            onChange={handleInput}
+            value={loginInput.password}
           />
 
           <div className="card-actions justify-center" type="submit">
-            <button className="btn btn-primary w-full mb-5 normal-case">
+            <button type="submit" className="btn btn-primary w-full mb-5 normal-case">
               Sign in
             </button>
           </div>
@@ -77,12 +85,12 @@ export const Signin = () => {
           <div className="text-center text-xs">
             <p>
               Don’t have account?{" "}
-              <a href="#" className="font-bold">
+              <Link to="/auth/Register" className="font-bold">
                 Register here
-              </a>
+              </Link>
             </p>
           </div>
-        </div>
+        </form>
       </div>
       <ToastContainer />
     </div>

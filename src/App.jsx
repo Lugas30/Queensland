@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import "./assets/global.css";
 import { NotFound } from "./pages/NotFound";
 import { Home } from "./pages/Home";
@@ -14,7 +14,7 @@ import { ForgotPass } from "./pages/auth/ForgotPass";
 
 import axios from 'axios';
 
-axios.defaults.baseURL = "https://api.queensland.id/api/";
+axios.defaults.baseURL = "https://api.queensland.id/";
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.post['Accept'] = 'application/json';
 axios.defaults.withCredentials = true;
@@ -27,6 +27,7 @@ axios.interceptors.request.use(function (config){
 });
 
 function App() {
+
   return (
       <Router>
         <Routes>
@@ -37,9 +38,13 @@ function App() {
           <Route path="/Cart" element={<Cart />} />
           <Route path="/Shipping" element={<Shipping />} />
           <Route path="/Thankyou" element={<Thankyou />} />
-          <Route path="/auth/Signin" element={<Signin />} />
+          {/* <Route path="/auth/Signin" element={<Signin />} />
           <Route path="/auth/Register" element={<Register />} />
-          <Route path="/auth/ForgotPass" element={<ForgotPass />} />
+          <Route path="/auth/ForgotPass" element={<ForgotPass />} /> */}
+          <Route path="/auth/Signin" element={localStorage.getItem('auth_token') ? <Navigate to='/' /> : <Signin />} ></Route>
+          <Route path="/auth/Register" element={localStorage.getItem('auth_token') ? <Navigate to='/' /> : <Register />} ></Route>
+          <Route path="/auth/ForgotPass" element={localStorage.getItem('auth_token') ? <Navigate to='/' /> : <ForgotPass />} ></Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

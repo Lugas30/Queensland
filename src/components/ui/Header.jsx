@@ -1,10 +1,50 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 export const Header = () => {
   const [categories, setCategories] = useState([]);
   const [cartData, setCartData] = useState([]);
+
+  // add kholis
+      const navigate = useNavigate(); 
+    const logoutSubmit = (e) => {
+        e.preventDefault();
+
+        axios.post(`api/logout`).then(res => {
+            if (res.data.status === 200) 
+            {
+                localStorage.removeItem('auth_token', res.data.token);
+                localStorage.removeItem('auth_name', res.data.username);
+                //swal("Success",res.data.message,"success");
+                toast.success("Anda berhasil logout akun!");
+                navigate('/');
+            } 
+        });
+    }
+
+    var AuthButtons = '';
+    if (!localStorage.getItem('auth_token')) {
+        AuthButtons = (
+              <button className="btn btn-ghost normal-case">
+                <div className="indicator">
+                  <span>Sign in</span>
+                </div>
+              </button>
+        );
+    } else {
+        AuthButtons = (
+
+            <button type="button" onClick={logoutSubmit} className="btn btn-ghost normal-case">
+              <div className="indicator">
+                <span>Logout</span>
+              </div>
+            </button>
+
+        );
+    }
+  // end
 
   useEffect(() => {
     axios
@@ -95,11 +135,9 @@ export const Header = () => {
       {/* Navbar End */}
       <div className="navbar-end">
         {/* Account */}
-        <button className="btn btn-ghost normal-case">
-          <div className="indicator">
-            <span>Account</span>
-          </div>
-        </button>
+        <Link to={`/auth/Signin`}>
+          {AuthButtons}
+        </Link>
 
         {/* Cart or Bags button */}
         <div className="dropdown dropdown-end">
@@ -147,6 +185,7 @@ export const Header = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </nav>
   );
 };
